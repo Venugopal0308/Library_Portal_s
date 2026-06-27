@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Library Books
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<!-- Heading -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2>📚 Digital Library</h2>
+
+        <p class="text-muted">
+            Browse and discover your next book
+        </p>
+
+    </div>
+
+    {% if session.role=="admin" %}
+
+    <a href="/add-book" class="btn btn-success">
+
+        <i class="fa fa-plus"></i>
+
+        Add Book
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+<!-- Search -->
+
+<form method="GET" action="/books">
+
+<div class="input-group mb-4">
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Search by Title, Author or Genre..."
+value="{{ request.args.get('search','') }}">
+
+<button class="btn btn-primary">
+
+<i class="fa fa-search"></i>
+
+Search
+
+</button>
+
+</div>
+
+</form>
+
+<!-- Books -->
+
+<div class="row">
+
+{% for book in books %}
+
+<div class="col-lg-4 col-md-6 mb-4">
+
+<div class="card shadow-sm h-100">
+
+<div class="card-body">
+
+<h4 class="text-primary">
+
+{{ book.title }}
+
+</h4>
+
+<hr>
+
+<p>
+
+<b>Author :</b>
+
+{{ book.author }}
+
+</p>
+
+<p>
+
+<b>Genre :</b>
+
+{{ book.genre }}
+
+</p>
+
+<p>
+
+<b>Published :</b>
+
+{{ book.publication_year }}
+
+</p>
+
+<p>
+
+<b>Available :</b>
+
+{% if book.available_copies>0 %}
+
+<span class="badge bg-success">
+
+{{ book.available_copies }}
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Out of Stock
+
+</span>
+
+{% endif %}
+
+</p>
+
+</div>
+
+<div class="card-footer bg-white">
+
+<a href="/book/{{ book.id }}"
+class="btn btn-primary btn-sm">
+
+<i class="fa fa-eye"></i>
+
+View
+
+</a>
+
+{% if session.role=="student" %}
+
+{% if book.available_copies>0 %}
+
+<a href="/borrow/{{ book.id }}"
+class="btn btn-success btn-sm">
+
+<i class="fa fa-book"></i>
+
+Borrow
+
+</a>
+
+{% endif %}
+
+{% endif %}
+
+{% if session.role=="admin" %}
+
+<a href="/edit-book/{{ book.id }}"
+class="btn btn-warning btn-sm">
+
+<i class="fa fa-edit"></i>
+
+</a>
+
+<a href="/delete-book/{{ book.id }}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete this book?')">
+
+<i class="fa fa-trash"></i>
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

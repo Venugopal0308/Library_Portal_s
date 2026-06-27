@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add New Book
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <!-- Back Navigation -->
+            <div class="mb-3">
+                <a href="/dashboard" class="text-decoration-none text-muted small">
+                    ← Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Card Form Wrapper -->
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-dark text-white py-3 text-center">
+                    <h4 class="mb-0 fw-bold">➕ Catalog a New Book</h4>
+                    <p class="text-white-50 small mb-0 mt-1">Insert an asset into your digital inventory</p>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <form method="POST">
+                        
+                        <!-- Title Input -->
+                        <div class="form-floating mb-3">
+                            <input type="text" name="title" id="titleInput" class="form-control" placeholder="Title" required>
+                            <label for="titleInput">Book Title</label>
+                        </div>
+
+                        <!-- Author Input -->
+                        <div class="form-floating mb-3">
+                            <input type="text" name="author" id="authorInput" class="form-control" placeholder="Author" required>
+                            <label for="authorInput">Author Name</label>
+                        </div>
+                        <!-- Add this input field right above your Genre field inside templates/add_book.html -->
+                        <div class="form-floating mb-3">
+                            <input type="url" name="cover_url" id="coverUrlInput" class="form-control" placeholder="https://example.com/cover.jpg">
+                            <label for="coverUrlInput">Book Cover Image URL (Optional)</label>
+                        </div>
+                        <!-- Genre Input -->
+                        <div class="form-floating mb-3">
+                            <input type="text" name="genre" id="genreInput" class="form-control" placeholder="Genre" required>
+                            <label for="genreInput">Genre / Category</label>
+                        </div>
+
+                        <!-- Split Grid Fields for Numbers -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" name="year" id="yearInput" class="form-control" placeholder="Year" required min="0" max="2026">
+                                    <label for="yearInput">Publish Year</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" name="copies" id="copiesInput" class="form-control" placeholder="Copies" required min="1" value="1">
+                                    <label for="copiesInput">Stock Copies</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Submit Button Action -->
+                        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm py-2">
+                            💾 Add Book to System
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

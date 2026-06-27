@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Borrowed Books</title>
+
+</head>
+
+<body>
+
+<h1>All Borrowed Books</h1>
+
+<a href="/dashboard">Dashboard</a>
+
+<br><br>
+
+<table border="1" cellpadding="10">
+
+<tr>
+
+    <th>ID</th>
+    <th>Student</th>
+    <th>Email</th>
+    <th>Book</th>
+    <th>Author</th>
+    <th>Borrow Date</th>
+    <th>Return Date</th>
+    <th>Status</th>
+
+</tr>
+
+{% for r in records %}
+
+<tr>
+
+<td>{{ r[0] }}</td>
+<td>{{ r[1] }}</td>
+<td>{{ r[2] }}</td>
+<td>{{ r[3] }}</td>
+<td>{{ r[4] }}</td>
+<td>{{ r[5] }}</td>
+<td>{{ r[6] if r[6] else "-" }}</td>
+<td>{{ r[7] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+
+</html>

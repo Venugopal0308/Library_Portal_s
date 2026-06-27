@@ -1,0 +1,53 @@
+<h1>Welcome {{ name }}</h1>
+
+<h2>Statistics</h2>
+
+<ul>
+    <li>Total Books : {{ stats.total_books }}</li>
+    <li>Available Books : {{ stats.available_books }}</li>
+    <li>Borrowed Books : {{ stats.borrowed_books }}</li>
+    <li>Total Users : {{ stats.total_users }}</li>
+</ul>
+
+<h2>🔥 Top Trending Books</h2>
+
+<table border="1">
+<tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Borrow Count</th>
+</tr>
+
+{% for book in trending_books %}
+<tr>
+    <td>{{ book.title }}</td>
+    <td>{{ book.author }}</td>
+    <td>{{ book.borrow_count }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<h2>📚 Recently Added Books</h2>
+
+<ul>
+{% for book in recent_books %}
+    <li>{{ book.title }} - {{ book.author }}</li>
+{% endfor %}
+</ul>
+
+<h2>🤖 AI Recommendations</h2>
+
+{% for book in recommendations %}
+
+<h4>{{ book.title }}</h4>
+
+<p>{{ book.author }}</p>
+
+<p>{{ book.genre }}</p>
+
+<p>{{ (book.ai_description | default('')) | truncate(120) }}</p>
+
+<hr>
+
+{% endfor %}

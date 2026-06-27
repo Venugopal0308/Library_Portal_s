@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Styling isolated strictly to the registration card context */
+    .register-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 35px;
+    }
+
+    .register-logo {
+        font-size: 50px;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .form-floating > .form-control:focus, 
+    .form-floating > .form-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
+    }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card shadow-lg border border-light-subtle">
+        
+        <div class="register-logo mb-2">📚</div>
+        <h2 class="text-center fw-bold text-primary mb-1">Create Account</h2>
+        <p class="text-center text-muted small mb-4">Digital Library Management System</p>
+
+        <form method="POST" autocomplete="off">
+
+            <div class="form-floating mb-3">
+                <input type="text" name="name" id="nameInput" class="form-control" placeholder="John Doe" required>
+                <label for="nameInput">Full Name</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="email" name="email" id="emailInput" class="form-control" placeholder="name@example.com" required>
+                <label for="emailInput">Email Address</label>
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <input type="password" name="password" id="password" class="form-control rounded-start" placeholder="Password" onkeyup="checkStrength()" required>
+                        <label for="password">Password</label>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary px-3" onclick="togglePassword('password')">
+                        <i class="fa-regular fa-eye" id="password-icon"></i>
+                    </button>
+                </div>
+                <div id="strength" class="small mt-1 ps-1 fw-semibold"></div>
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <input type="password" id="confirm_password" class="form-control rounded-start" placeholder="Confirm Password" required>
+                        <label for="confirm_password">Confirm Password</label>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary px-3" onclick="togglePassword('confirm_password')">
+                        <i class="fa-regular fa-eye" id="confirm_password-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-floating mb-4">
+                <select name="role" id="roleSelect" class="form-select" required>
+                    <option value="student" selected>Student</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <label for="roleSelect">Register As</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2.5 fs-5 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                <i class="fa fa-user-plus small"></i> Create Account
+            </button>
+
+        </form>
+
+        <div class="text-center mt-4 pt-2 border-top border-light">
+            <span class="text-muted small">Already have an account?</span>
+            <a href="/login" class="text-decoration-none fw-bold ms-1 small">Login</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function togglePassword(id) {
+    const inputField = document.getElementById(id);
+    const textIcon = document.getElementById(`${id}-icon`);
+    
+    if (inputField.type === "password") {
+        inputField.type = "text";
+        textIcon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        inputField.type = "password";
+        textIcon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+function checkStrength() {
+    const pwdValue = document.getElementById("password").value;
+    const feedbackField = document.getElementById("strength");
+    
+    if (!pwdValue) {
+        feedbackField.innerHTML = "";
+        return;
+    }
+
+    if (pwdValue.length < 6) {
+        feedbackField.innerHTML = '<span class="text-danger">⚠️ Weak Password</span>';
+    } else if (pwdValue.length < 10) {
+        feedbackField.innerHTML = '<span class="text-warning">⚡ Medium Password</span>';
+    } else {
+        feedbackField.innerHTML = '<span class="text-success">✓ Strong Password</span>';
+    }
+}
+
+document.querySelector("form").onsubmit = function() {
+    const pwd = document.getElementById("password").value;
+    const confirmPwd = document.getElementById("confirm_password").value;
+    
+    if (pwd !== confirmPwd) {
+        alert("Validation Error: Passwords do not match. Please verify your typing and try again.");
+        return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}

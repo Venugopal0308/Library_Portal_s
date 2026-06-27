@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digital Library</title>
+
+    <style>
+        /* existing page */
+        body {
+            font-family: Arial;
+        }
+
+        /* chat button */
+        #chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* chat box */
+        #chat-box {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border: 1px solid #ccc;
+            display: none;
+            flex-direction: column;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            height: 320px;
+        }
+
+        #input-box {
+            display: flex;
+        }
+
+        #input {
+            flex: 1;
+            padding: 8px;
+        }
+
+        #send {
+            padding: 8px;
+            background: green;
+            color: white;
+            border: none;
+        }
+
+        .user { text-align: right; color: blue; }
+        .bot { text-align: left; color: green; }
+    </style>
+</head>
+
+<body>
+
+<h1>Welcome to Digital Library</h1>
+
+<a href="/login">Login</a>
+<a href="/register">Register</a>
+
+<!-- 💬 Chat Button -->
+<button id="chat-btn" onclick="toggleChat()">💬</button>
+
+<!-- 💬 Chat Box -->
+<div id="chat-box">
+    <div id="messages"></div>
+
+    <div id="input-box">
+        <input id="input" placeholder="Ask something..." />
+        <button id="send" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+function toggleChat() {
+    let box = document.getElementById("chat-box");
+    box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+async function sendMessage() {
+    let input = document.getElementById("input");
+    let message = input.value;
+    if (!message) return;
+
+    addMessage("user", message);
+    input.value = "";
+
+    let res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+    });
+
+    let data = await res.json();
+    addMessage("bot", data.reply);
+}
+
+function addMessage(role, text) {
+    let div = document.createElement("div");
+    div.className = role;
+
+    if (role === "bot") {
+        div.innerText = "typing...";
+        document.getElementById("messages").appendChild(div);
+
+        setTimeout(() => {
+            div.innerText = text;
+        }, 500);
+    } else {
+        div.innerText = text;
+        document.getElementById("messages").appendChild(div);
+    }
+}
+</script>
+
+</body>
+</html>

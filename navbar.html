@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow sticky-top">
+    <div class="container">
+        
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-4 text-white" href="/dashboard">
+            <span class="text-primary me-2"><i class="fas fa-book-open"></i></span>
+            <span>Digital Library</span>
+            {% if session.get('role') == "student" %}
+                <span class="badge bg-primary fs-6 ms-2 font-monospace align-middle text-uppercase px-2">Student</span>
+            {% elif session.get('role') == "admin" %}
+                <span class="badge bg-danger fs-6 ms-2 font-monospace align-middle text-uppercase px-2">Admin</span>
+            {% endif %}
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#menu" 
+                aria-controls="menu" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-1 mt-2 mt-lg-0">
+                
+                {% if session.get('role') == "student" %}
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/dashboard">
+                        <i class="fas fa-home me-2 opacity-75"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/books">
+                        <i class="fas fa-book me-2 opacity-75"></i> Books
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/my-books">
+                        <i class="fas fa-book-reader me-2 opacity-75"></i> My Books
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/book-ranking">
+                        <i class="fas fa-fire me-2 opacity-75"></i> Trending
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if session.get('role') == "admin" %}
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/admin/dashboard">
+                        <i class="fas fa-chart-line me-2 opacity-75"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/books">
+                        <i class="fas fa-tasks me-2 opacity-75"></i> Manage Books
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 d-flex align-items-center" href="/add-book">
+                        <i class="fas fa-plus-circle me-2 opacity-75"></i> Add Book
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item d-lg-none my-1"><hr class="dropdown-divider border-light opacity-25"></li>
+
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-outline-warning btn-sm px-3 py-2 d-flex align-items-center fw-bold" href="/logout">
+                        <i class="fas fa-right-from-bracket me-2"></i> Logout
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

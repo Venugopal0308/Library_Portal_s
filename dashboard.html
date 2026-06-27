@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Student Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="p-4 mb-4 bg-primary text-white rounded shadow">
+        <h2>👋 Welcome, {{ name }}</h2>
+        <p>Explore books, discover AI recommendations, and manage your borrowing.</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box text-center">
+                <div class="card-body">
+                    <h1>📚</h1>
+                    <h3>{{ stats.total_books }}</h3>
+                    <p>Total Books</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box text-center">
+                <div class="card-body">
+                    <h1>✅</h1>
+                    <h3>{{ stats.available_books }}</h3>
+                    <p>Available</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box text-center">
+                <div class="card-body">
+                    <h1>📖</h1>
+                    <h3>{{ stats.borrowed_books }}</h3>
+                    <p>Borrowed</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box text-center">
+                <div class="card-body">
+                    <h1>🏆</h1>
+                    <h3>{{ trending_books|length }}</h3>
+                    <p>Trending Books</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-danger text-white">
+            🔥 Top 5 Trending Books
+        </div>
+
+        <div class="card-body">
+
+            {% if trending_books %}
+
+            <table class="table table-hover">
+
+                <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Borrow Count</th>
+                    <th></th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for book in trending_books %}
+
+                <tr>
+
+                    <td>{{ loop.index }}</td>
+
+                    <td>{{ book.title }}</td>
+
+                    <td>{{ book.author }}</td>
+
+                    <td>
+
+                        <span class="badge bg-success">
+
+                            {{ book.borrow_count }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <a href="/book/{{ book.id }}"
+                           class="btn btn-primary btn-sm">
+
+                            View
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="alert alert-warning">
+
+                No Trending Books Yet
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-success text-white">
+
+            📚 Recently Added Books
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                {% for book in recent_books %}
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="card">
+
+                        <div class="card-body">
+
+                            <h5>{{ book.title }}</h5>
+
+                            <p>{{ book.author }}</p>
+
+                            <a href="/book/{{ book.id }}"
+                               class="btn btn-outline-primary">
+
+                                Details
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            🤖 AI Recommended Books
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                {% for book in recommendations %}
+
+                <div class="col-md-4">
+
+                    <div class="card h-100 border-primary">
+
+                        <div class="card-body">
+
+                            <h4>{{ book.title }}</h4>
+
+                            <p>
+
+                                <b>Author</b>
+
+                                {{ book.author }}
+
+                            </p>
+
+                            <p>
+
+                                <b>Genre</b>
+
+                                {{ book.genre }}
+
+                            </p>
+
+                            <small>
+
+                                {{ (book.ai_description or '')[:120] }}...
+
+                            </small>
+
+                            <br><br>
+
+                            <a href="/book/{{ book.id }}"
+                               class="btn btn-primary">
+
+                                Read More
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= PRO CHATBOT ================= -->
+
+<style>
+/* Floating button */
+#chat-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: transform 0.2s ease;
+}
+
+#chat-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Chat container */
+#chat-box {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 360px;
+    height: 480px;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    z-index: 9999;
+}
+
+/* Header */
+.chat-header {
+    padding: 12px;
+    background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Messages */
+#messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Message bubbles */
+.msg {
+    max-width: 75%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    animation: fadeIn 0.2s ease-in;
+    word-wrap: break-word;
+}
+
+.user {
+    background: #2563eb;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.bot {
+    background: rgba(255,255,255,0.8);
+    color: #111;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+/* Input area */
+.chat-input {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: black;
+}
+
+.chat-input button {
+    padding: 12px 16px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chat-input button:hover {
+    background: #16a34a;
+}
+
+/* typing indicator */
+.typing {
+    font-size: 12px;
+    color: gray;
+    font-style: italic;
+}
+
+/* animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<!-- Chat Button -->
+<button id="chat-btn" onclick="toggleChat()">💬</button>
+
+<!-- Chat Box -->
+<div id="chat-box">
+
+    <div class="chat-header">
+        🤖 Smart Library Assistant
+    </div>
+
+    <div id="messages"></div>
+
+    <div class="chat-input">
+    <input id="input" placeholder="Ask something..." />
+    <button onclick="sendMessage()">➤</button>
+</div>
+
+</div>
+
+<script>
+function toggleChat() {
+    let box = document.getElementById("chat-box");
+    box.style.display = (box.style.display === "flex") ? "none" : "flex";
+
+    if (box.style.display === "flex" && document.getElementById("messages").children.length === 0) {
+        addMessage("bot", "👋 Hi! I'm your Library Assistant. Ask me anything!");
+    }
+}
+
+async function sendMessage() {
+    let input = document.getElementById("input");
+    let message = input.value;
+    if (!message) return;
+
+    addMessage("user", message);
+    input.value = "";
+
+    showTyping();
+
+    let res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+    });
+
+    let data = await res.json();
+
+    removeTyping();
+    addMessage("bot", data.reply);
+}
+
+function addMessage(role, text) {
+    let div = document.createElement("div");
+    div.classList.add("msg", role);
+    div.innerText = text;
+
+    let box = document.getElementById("messages");
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+    let div = document.createElement("div");
+    div.id = "typing";
+    div.className = "typing";
+    div.innerText = "🤖 typing...";
+    document.getElementById("messages").appendChild(div);
+}
+function removeTyping() {
+    let t = document.getElementById("typing");
+    if (t) t.remove();
+}
+</script>
+
+<!-- ================= END PRO CHATBOT ================= -->
+{% endblock %}

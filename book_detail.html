@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ book[1] }} - Details
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Navigation Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ book[1] }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Main Info Panel (Left Column) -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow border-0 mb-4">
+                <div class="card-body p-4">
+                    
+                    <!-- New Media Grid Split (Image Left, Title Right) -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-4 col-sm-5 text-center">
+                            <!-- Fallback handles empty database entries dynamically using placehold.co -->
+                            <img src="{{ book[6] if book[6] else 'https://placehold.co/400x600/1e293b/fff?text=' ~ book[1]|urlencode }}" 
+                                 class="img-fluid rounded shadow-sm border" 
+                                 alt="Book Cover for {{ book[1] }}"
+                                 style="max-height: 280px; width: 100%; object-fit: cover;">
+                        </div>
+                        
+                        <div class="col-md-8 col-sm-7 d-flex flex-column justify-content-between">
+                            <div>
+                                <h1 class="display-6 fw-bold mb-1 text-dark">{{ book[1] }}</h1>
+                                <p class="lead text-muted mb-3">by {{ book[2] }}</p>
+                                <span class="badge bg-light text-dark border px-2.5 py-1.5 font-monospace mb-2">{{ book[3] }}</span>
+                            </div>
+                            
+                            <!-- Availability Badge Stack -->
+                            <div>
+                                {% if book[5] > 0 %}
+                                    <span class="badge bg-success fs-6 px-3 py-2">✓ Available</span>
+                                    <div class="text-muted small mt-1">{{ book[5] }} copies left in library</div>
+                                {% else %}
+                                    <span class="badge bg-danger fs-6 px-3 py-2">🪹 Out of Stock</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 text-muted">
+
+                    <!-- Metadata Grid -->
+                    <div class="row text-center bg-light rounded p-3 mb-4 mx-0 shadow-sm">
+                        <div class="col-6 py-2 border-end border-2 border-white">
+                            <span class="text-uppercase font-monospace text-muted small d-block">Genre Class</span>
+                            <strong class="text-dark">{{ book[3] }}</strong>
+                        </div>
+                        <div class="col-6 py-2">
+                            <span class="text-uppercase font-monospace text-muted small d-block">Publication Year</span>
+                            <strong class="text-dark">{{ book[4] }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- AI Summary Callout Section -->
+                    <div class="mb-4">
+                        <h4 class="fw-bold text-dark d-flex align-items-center mb-3">
+                            <span class="me-2">🤖</span> AI Deep Summary
+                        </h4>
+                        <div class="bg-primary-subtle border-start border-primary border-4 p-3 rounded shadow-sm text-dark lh-base">
+                            {{ ai_description or "An AI summary is currently being generated for this text." }}
+                        </div>
+                    </div>
+
+                    <!-- Action Button Bar -->
+                    <div class="d-flex gap-3 mt-4 pt-2 border-top">
+                        {% if book[5] > 0 %}
+                            <a href="/borrow/{{ book[0] }}" class="btn btn-primary btn-lg px-4 fw-bold shadow">
+                                📥 Borrow This Book
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary btn-lg px-4 disabled" disabled>
+                                No Copies Available
+                            </button>
+                        {% endif %}
+                        <a href="/dashboard" class="btn btn-outline-secondary btn-lg px-4">
+                            Back to Books
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Block (Right Sidebar Column) -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-0 position-sticky" style="top: 20px;">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 d-flex align-items-center">
+                        <span class="me-2">✨</span> Readers Also Liked
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recommendations %}
+                    <div class="list-group list-group-flush">
+                        {% for rec in recommendations %}
+                        <a href="/book/{{ rec[0] }}" class="list-group-item list-group-item-action p-3 d-flex align-items-center">
+                            <!-- Small Cover Thumbnails for recommendations layout panel -->
+                            <img src="{{ rec[3] if rec[3] else 'https://placehold.co/100x150/0f172a/fff?text=Book' }}" 
+                                 class="rounded me-3 border shadow-sm" 
+                                 style="width: 45px; height: 65px; object-fit: cover;" 
+                                 alt="">
+                            <div class="flex-grow-1" style="max-width: 75%;">
+                                <h6 class="mb-0 text-primary fw-bold text-truncate">{{ rec[1] }}</h6>
+                                <p class="mb-0 text-muted small text-truncate">by {{ rec[2] }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <p class="mb-0 small">No personalized recommendations discovered for this title yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

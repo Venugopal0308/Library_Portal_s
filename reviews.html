@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Reviews</title>
+</head>
+<body>
+
+<h2>Book Reviews</h2>
+
+{% if reviews %}
+
+    {% for review in reviews %}
+
+        <div style="border:1px solid #ccc;padding:15px;margin:10px;">
+
+            <h4>
+                Rating: ⭐ {{ review.rating }}/5
+            </h4>
+
+            <p>
+                {{ review.comment }}
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <h3>No reviews available.</h3>
+
+{% endif %}
+
+<a href="/books">
+    Back to Books
+</a>
+
+</body>
+</html>
